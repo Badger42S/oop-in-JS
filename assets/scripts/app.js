@@ -15,6 +15,9 @@ class ProductItem{
     constructor(product){
         this.product=product;
     }
+    addToCart(){
+        App.addProductToCart(this.product);
+    }
     render(){
         const prodEl=document.createElement('li');
         prodEl.className='product-item';
@@ -29,6 +32,8 @@ class ProductItem{
             </div>
             </div>
         `;
+        const addButton=prodEl.querySelector('button');
+        addButton.addEventListener('click',this.addToCart.bind(this))
         return prodEl;
     }
 }
@@ -49,7 +54,6 @@ class ProductsList{
         )
     ];
     render(){
-        const renderHook=document.getElementById('app');
         const prodList=document.createElement('ul');
         prodList.className='product-list';
         for(const prod of this.products){
@@ -57,9 +61,48 @@ class ProductsList{
             const prodEl=productItem.render();
             prodList.append(prodEl);
         };
-        renderHook.append(prodList);
+        return prodList;
     };
 }
 
-const productList =new ProductsList;
-productList.render();
+class Cart{
+    items=[];
+    addItem(product){
+        this.items.push(product);
+        this.totalOutput.innerHTML=`<h2>Total amount: \$${1}</h2>`;
+    }
+    render(){
+        const cartEl=document.createElement('section');
+        cartEl.innerHTML=`
+         <h2>Total amount: \$${0}</h2>
+         <button>Order</button>
+        `;
+        cartEl.className="cart";
+        this.totalOutput=cartEl.querySelector('h2');
+        return cartEl;
+    }
+}
+
+class Shop{
+    render(){
+        const renderHook=document.getElementById('app');
+        this.cart =new Cart;
+        const cartItem=this.cart.render();
+        const productList =new ProductsList;
+        const prodList= productList.render();
+        renderHook.append(cartItem,prodList);
+    }
+}
+
+class App{
+    static init(){
+        const shop =new Shop;
+        shop.render();
+        this.cart=shop.cart;
+    }
+    static addProductToCart(product){
+        this.cart.addItem(product);
+    }
+}
+
+App.init();
