@@ -1,18 +1,29 @@
-
+class Product{
+    title;
+    imgUrl;;
+    price;
+    description;
+    constructor(title, imgUrl,price,desc){
+        this.title=title;
+        this.imgUrl=imgUrl;
+        this.price=price;
+        this.description=desc;
+    }
+}
 const productList={
     products: [
-        {
-            title:'chair',
-            imgUrl:'https://cdn.iconscout.com/icon/premium/png-256-thumb/chair-482-556971.png',
-            description:'simple chair',
-            price:'2.60'
-        },
-        {
-            title:'box',
-            imgUrl:'https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/256x256/plain/box_surprise.png',
-            description:'empty box',
-            price:'9.99'
-        }
+        new Product(
+            'chair',
+            'https://cdn.iconscout.com/icon/premium/png-256-thumb/chair-482-556971.png',
+            2.60,
+            'empty box'
+        ),
+        new Product(
+            'box',
+            'https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/256x256/plain/box_surprise.png',
+            9.99,
+            'empty box'
+        )
     ],
     render(){
         const renderHook=document.getElementById('app');
