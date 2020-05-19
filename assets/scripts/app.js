@@ -67,9 +67,16 @@ class ProductsList{
 
 class Cart{
     items=[];
+
+    get  totalAmont(){
+        let sum=this.items.reduce((prevValue, item)=>{
+            return prevValue+item.price
+        },0);
+        return sum;
+    }
     addItem(product){
         this.items.push(product);
-        this.totalOutput.innerHTML=`<h2>Total amount: \$${1}</h2>`;
+        this.totalOutput.innerHTML=`<h2>Total amount: \$${this.totalAmont.toFixed(2)}</h2>`;
     }
     render(){
         const cartEl=document.createElement('section');
