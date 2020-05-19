@@ -1,7 +1,11 @@
 class Component{
-    constructor(renderHookId){
+    constructor(renderHookId, shouldRender=true){
         this.hookId=renderHookId;
+        if(shouldRender){
+            this.render();
+        }
     }
+    render(){}
     createRootElement(tag,cssClasses, attributes){
         const rootElement=document.createElement(tag);
         if(cssClasses){
@@ -32,8 +36,9 @@ class Product{
 
 class ProductItem extends Component{
     constructor(product, hookId){
-        super(hookId);
+        super(hookId,false);
         this.product=product;
+        this.render();
     }
     addToCart(){
         App.addProductToCart(this.product);
@@ -64,26 +69,47 @@ class ElementAttribute{
 }
 
 class ProductsList extends Component{
-    products= [
-        new Product(
-            'chair',
-            'https://cdn.iconscout.com/icon/premium/png-256-thumb/chair-482-556971.png',
-            2.60,
-            'empty box'
-        ),
-        new Product(
-            'box',
-            'https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/256x256/plain/box_surprise.png',
-            9.99,
-            'empty box'
-        )
-    ];
-    render(){
-        this.createRootElement('ul', 'product-list', [new ElementAttribute('id', 'prod-list')]);
+    constructor(hookId){
+        super(hookId);
+        this.fetchProducts();
+    }
+
+    products= [];
+    //simulate waiting data
+    fetchProducts(){
+        this.products= [
+            new Product(
+                'chair',
+                'https://cdn.iconscout.com/icon/premium/png-256-thumb/chair-482-556971.png',
+                2.60,
+                'empty box'
+            ),
+            new Product(
+                'box',
+                'https://d1nhio0ox7pgb.cloudfront.net/_img/i_collection_png/256x256/plain/box_surprise.png',
+                9.99,
+                'empty box'
+            )
+        ];
+        this.renderProducts();
+    }
+    //stand alone function for render
+    renderProducts(){
         for(const prod of this.products){
             const productItem=new ProductItem(prod, 'prod-list');
             productItem.render();
         };
+    }
+    //override parrent metod
+    render(){
+        this.createRootElement(
+            'ul', 
+            'product-list', 
+            [new ElementAttribute('id', 'prod-list')]
+        );
+        if(this.products &&this.products.length>0){
+            this.renderProducts();
+        }
     };
 }
 
@@ -115,18 +141,15 @@ class Cart extends Component{
 }
 
 class Shop{
-    render(){
+    constructor(){
         this.cart =new Cart('app');
-        this.cart.render();
-        const productList =new ProductsList('app');
-        productList.render();
+        new ProductsList('app');
     }
 }
 
 class App{
     static init(){
         const shop =new Shop;
-        shop.render();
         this.cart=shop.cart;
     }
     static addProductToCart(product){
