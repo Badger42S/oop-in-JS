@@ -130,6 +130,9 @@ class Cart extends Component{
         this.items.push(product);
         this.totalOutput.innerHTML=`<h2>Total amount: \$${this.totalAmont.toFixed(2)}</h2>`;
     }
+    orderHandler(){
+        console.log(this.items);
+    }
     render(){
         const cartEl=this.createRootElement('section', 'cart');
         cartEl.innerHTML=`
@@ -137,6 +140,8 @@ class Cart extends Component{
          <button>Order</button>
         `;
         this.totalOutput=cartEl.querySelector('h2');
+        //anonimus function for calling method
+        cartEl.querySelector('button').addEventListener('click', ()=>this.orderHandler());
     }
 }
 
